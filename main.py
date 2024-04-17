@@ -1,49 +1,62 @@
 from tkinter import *
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+import os
+
+caminho = os.path.dirname(__file__)
 
 # iniciar app
 app = Tk()
 
-# configurações
+# configurações básicas
 app.title("Perry's ThermoGraph app")
 app.geometry("1000x600")
 app.configure(bg="#e7e7e7")
 
 # criação da caixa de entrada e inserção do nome da substância
-nome = Label(app, text="Insira o nome da substância:", bg="#e7e7e7",fg="black", font="Arial 11 bold")
+nome = Label(
+    app,
+    text="Insira o nome da substância:",
+    bg="#e7e7e7",
+    fg="black",
+    font="Arial 11 bold",
+)
 nome.place(x=20, y=30, width=200, height=30, anchor=W)
-nome_substancia = Entry(app, bg="white",fg="black", font="Arial 11")
+nome_substancia = Entry(app, bg="white", fg="black", font="Arial 11")
 nome_substancia.place(x=20, y=60, width=200, height=30, anchor=W)
 
 
-# leitura da tabela de pressao de vapor
-#pressao_vapor_perry = pd.read_csv("pressao_vapor.csv")
+# criação do botão para confirmar o nome da substância
+def confirma_substancia():
+    print(f"Substância: {nome_substancia.get()}")
 
 
-# função para calculo da pressao de vapor
-""" def calc_pressao_vapor(data: pd.DataFrame, compound: str):
-    row_compound = pressao_vapor_perry[pressao_vapor_perry["Name"] == compound]
-    C1 = row_compound["C1"].iloc[0]
-    C2 = row_compound["C2"].iloc[0]
-    C3 = row_compound["C3"].iloc[0]
-    C4 = row_compound["C4"].iloc[0]
-    C5 = row_compound["C5"].iloc[0]
-    Tmin = row_compound["Tmin"].iloc[0]
-    Tmax = row_compound["Tmax"].iloc[0]
-    T_range = np.linspace(Tmin, Tmax, 2000)
-    pressao_vapor = []
-    for T in T_range:
-        pressao_vapor.append(np.exp(C1 + C2 / T + C3 * np.log(T) + C4 * (T**C5)))
-    return T_range, pressao_vapor
+botao1 = Button(
+    app,
+    text="OK",
+    bg="#e7e7e7",
+    fg="black",
+    font="Arial 11",
+    command=confirma_substancia,
+)
+botao1.place(x=20, y=90, width=100, height=30, anchor=W)
 
 
-# exemplo
-compound = "Water"
-x, y = calc_pressao_vapor(pressao_vapor_perry, compound)
-plt.plot(x, y)
+# criação do botão para gravar o nome da substância
+def gravar_substancia():
+    nome_arquivo = caminho + "\\Resultados_" + nome_substancia.get() + ".txt"
+    arquivo = open(nome_arquivo, "a")
+    arquivo.write("Substância: " + nome_substancia.get())
+    arquivo.close()
+    print(f"Substância: {nome_substancia.get()}")
 
-plt.show() """
+
+botao2 = Button(
+    app,
+    text="Gravar",
+    bg="#e7e7e7",
+    fg="black",
+    font="Arial 11",
+    command=gravar_substancia,
+)
+botao2.place(x=120, y=90, width=100, height=30, anchor=W)
 
 app.mainloop()
