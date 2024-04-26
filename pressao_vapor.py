@@ -1,10 +1,9 @@
 import pandas as pd
 import numpy as np
 
-
 def calc_pressao_vapor(compound: str):
     # leitura da tabela de pressao de vapor
-    data = pd.read_csv("pressao_vapor.csv")
+    data = pd.read_csv("tabelas/pressao_vapor.csv")
     # selecionar a linha correspondente ao nome da substância
     row_compound = data[data["Name"] == compound]
     # calculo da pressao de vapor

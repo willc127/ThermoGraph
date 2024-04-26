@@ -1,4 +1,8 @@
 from tkinter import *
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from pressao_vapor import calc_pressao_vapor
+from densidade import calc_densidade
 import os
 
 caminho = os.path.dirname(__file__)
@@ -24,39 +28,93 @@ nome_substancia = Entry(app, bg="white", fg="black", font="Arial 11")
 nome_substancia.place(x=20, y=60, width=200, height=30, anchor=W)
 
 
-# criação do botão para confirmar o nome da substância
-def confirma_substancia():
-    print(f"Substância: {nome_substancia.get()}")
+# criação do grafico
+fig, ax = plt.subplots()
+canvas = FigureCanvasTkAgg(fig, master=app)
+canvas_widget = canvas.get_tk_widget()
+canvas_widget.place(x=350, y=50)
 
+# criação da barra de ferramentas
+toolbar = NavigationToolbar2Tk(canvas, app, pack_toolbar=False)
+toolbar.update()
+toolbar.pack(side=BOTTOM)
 
-botao1 = Button(
+# chamar função e criar botão para plotar o grafico da pressão de vapor
+def plotar_grafico_pressao():
+    ax.clear()
+    t1,p1 = calc_pressao_vapor(nome_substancia.get())
+    ax.plot(t1,p1)
+    plt.title("Pressão de Vapor: " + nome_substancia.get())
+    plt.xlabel("Temperatura (K)")
+    plt.ylabel("Pressão de Vapor (Pa)")
+    canvas.draw()
+
+botao_PV = Button(
     app,
-    text="OK",
+    text="PV",
     bg="#e7e7e7",
     fg="black",
     font="Arial 11",
-    command=confirma_substancia,
+    command=plotar_grafico_pressao
 )
-botao1.place(x=20, y=90, width=100, height=30, anchor=W)
+botao_PV.place(x=20, y=90, width=100, height=30, anchor=W)
 
+# chamar função e criar botão para plotar o grafico da densidade
+def plotar_grafico_densidade():
+    ax.clear()
+    t1,d1,v1 = calc_densidade(nome_substancia.get())
+    ax.plot(t1,d1)
+    plt.title("Densidade molar: " + nome_substancia.get())
+    plt.xlabel("Temperatura (K)")
+    plt.ylabel("Densidade (mol/dm³)")
+    canvas.draw()
 
-# criação do botão para gravar o nome da substância
-def gravar_substancia():
-    nome_arquivo = caminho + "\\Resultados_" + nome_substancia.get() + ".txt"
-    arquivo = open(nome_arquivo, "a")
-    arquivo.write("Substância: " + nome_substancia.get())
-    arquivo.close()
-    print(f"Substância: {nome_substancia.get()}")
-
-
-botao2 = Button(
+botao_Densidade = Button(
     app,
-    text="Gravar",
+    text="Densidade",
     bg="#e7e7e7",
     fg="black",
     font="Arial 11",
-    command=gravar_substancia,
+    command=plotar_grafico_densidade
 )
-botao2.place(x=120, y=90, width=100, height=30, anchor=W)
+botao_Densidade.place(x=20, y=120, width=100, height=30, anchor=W)
+
+
+# chamar função e criar botão para plotar o grafico do volume molar
+def plotar_grafico_volume():
+    ax.clear()
+    t1,d1,v1 = calc_densidade(nome_substancia.get())
+    ax.plot(t1,v1)
+    plt.title("Volume molar: " + nome_substancia.get())
+    plt.xlabel("Temperatura (K)")
+    plt.ylabel("Volume (dm³/mol)")
+    canvas.draw()
+
+botao_volume = Button(
+    app,
+    text="Volume",
+    bg="#e7e7e7",
+    fg="black",
+    font="Arial 11",
+    command=plotar_grafico_volume
+)
+botao_volume.place(x=120, y=120, width=100, height=30, anchor=W)
+
+# criação do botão para limpar o grafico
+def limpar():
+    ax.clear()
+    canvas.draw()
+    
+botao_limpar = Button(
+    app,
+    text="Limpar",
+    bg="#e7e7e7",
+    fg="black",
+    font="Arial 11",
+    command=limpar
+)
+botao_limpar.place(x=120, y=90, width=100, height=30, anchor=W)
+
+
 
 app.mainloop()
