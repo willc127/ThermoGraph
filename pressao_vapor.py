@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 def calc_pressao_vapor(compound: str):
     # leitura da tabela de pressao de vapor
     data = pd.read_csv("tabelas/pressao_vapor.csv")
@@ -17,5 +18,5 @@ def calc_pressao_vapor(compound: str):
     T_range = np.linspace(Tmin, Tmax, 2000)
     pressao_vapor = []
     for T in T_range:
-        pressao_vapor.append(np.exp(C1 + C2 / T + C3 * np.log(T) + C4 * (T**C5)))
+        pressao_vapor.append(1e-6 * np.exp(C1 + C2 / T + C3 * np.log(T) + C4 * (T**C5)))  # [MPa]
     return T_range, pressao_vapor
