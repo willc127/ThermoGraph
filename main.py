@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from pressao_vapor import calc_pressao_vapor
 from densidade import calc_densidade
+from entalpia_vap import calc_entalpia_vap
 import os
 
 caminho = os.path.dirname(__file__)
@@ -115,6 +116,31 @@ botao_volume = tk.Button(
 botao_volume.place(x=120, y=120, width=100, height=30, anchor=tk.W)
 
 
+# chamar função e criar botão para plotar o grafico da entalpia de vaporização
+def plotar_grafico_entalpia_vap():
+    ax.clear()
+    t1, dh1 = calc_entalpia_vap(nome_substancia.get())
+    ax.plot(t1, dh1)
+    plt.title("entalpia molar: " + nome_substancia.get())
+    plt.xlabel("Temperatura (K)")
+    plt.ylabel("Entalpia de vaporização (J/mol)")
+    canvas.draw()
+
+
+botao_entalpia = tk.Button(
+    app,
+    text="\u0394H_vap",
+    bg="#e7e7e7",
+    fg="black",
+    font="Arial 11",
+    command=plotar_grafico_entalpia_vap,
+)
+botao_entalpia.place(x=120, y=90, width=100, height=30, anchor=tk.W)
+
+
+
+
+
 # criação do botão para limpar o grafico
 def limpar():
     ax.clear()
@@ -133,7 +159,7 @@ botao_sair = tk.Button(
     bg="#e7e7e7",
     fg="black",
     font="Arial 11",
-    command=app.destroy,
+    command=app.quit,
 )
 botao_sair.place(x=120, y=200, width=100, height=30, anchor=tk.W)
 
