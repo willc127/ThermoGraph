@@ -5,7 +5,7 @@ entalpia_perry = pd.read_csv("tabelas/entalpia_vap.csv")
 criticos_perry = pd.read_csv("tabelas/criticos.csv")
 
 
-def calc_entalpia_vap(compound: str):
+def calc_entalpia_vap(compound: str, T_user: float):
     row_compound = entalpia_perry[entalpia_perry["Name"] == compound]
     row_compound_criticos = criticos_perry[criticos_perry["Name"] == compound]
     Tc = float(row_compound_criticos["Tc"].iloc[0])
@@ -16,9 +16,16 @@ def calc_entalpia_vap(compound: str):
     Tmin = float(row_compound["Tmin"].iloc[0])
     Tmax = float(row_compound["Tmax"].iloc[0])
     T_range = np.linspace(Tmin, Tmax, 2000)
+    entalpia_vap_user = (
+        C1
+        / 1000
+        * (1 - T_user / Tc) ** (C2 + C3 * T_user / Tc + C4 * (T_user / Tc) ** 2)
+    )
     entalpia_vap = []
     for T in T_range:
         entalpia_vap.append(
-            C1/1000 * (1 - T / Tc) ** (C2 + C3 * T / Tc + C4 * (T / Tc) ** 2) # [J/mol]
+            C1
+            / 1000
+            * (1 - T / Tc) ** (C2 + C3 * T / Tc + C4 * (T / Tc) ** 2)  # [J/mol]
         )
-    return T_range, entalpia_vap
+    return entalpia_vap_user, T_range, entalpia_vap
